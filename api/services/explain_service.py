@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parents[2]
 
 MODEL_PATH = BASE_DIR / "ml" / "saved_models" / "failure_prediction_model.pkl"
 
-model = joblib.load(MODEL_PATH)
+#model = joblib.load(MODEL_PATH)
 
 print("Model Loaded Successfully")
 

@@ -2,9 +2,9 @@ import joblib
 import pandas as pd
 
 # Load saved model
-model = joblib.load(
-    "ml/saved_models/failure_prediction_model.pkl"
-)
+#model = joblib.load(
+    #"ml/saved_models/failure_prediction_model.pkl"
+#)
 
 # Sample machine data
 new_machine = pd.DataFrame(
