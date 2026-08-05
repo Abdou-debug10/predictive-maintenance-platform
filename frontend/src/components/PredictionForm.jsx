@@ -84,7 +84,7 @@ export default function PredictionForm({ onPrediction }) {
 
             const predictionRes = await API.post("/predict", form);
 
-            const explainRes = await API.post("/explain", form);
+            //const explainRes = await API.post("/explain", form);
 
             setResult({
 
@@ -222,7 +222,7 @@ export default function PredictionForm({ onPrediction }) {
                     </label>
 
                     <select
-                       name="machine_type"
+                        name="machine_type"
                         value={form.machine_type}
                         onChange={handleChange}
                         style={inputStyle}
