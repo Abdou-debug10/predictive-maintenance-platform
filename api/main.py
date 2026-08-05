@@ -8,7 +8,7 @@ import joblib
 import pandas as pd
 
 # Kafka Producer
-from event_stream.producer import send_prediction
+#from event_stream.producer import send_prediction
 from api.explain import router as explain_router
 
 app = FastAPI()
@@ -27,9 +27,7 @@ app.add_middleware(
 )
 
 # Load ML Model
-model = joblib.load(
-    "ml/saved_models/failure_prediction_model.pkl"
-)
+model = None
 
 
 @app.get("/")
@@ -70,79 +68,16 @@ def fetch_predictions():
 @app.post("/predict")
 def predict(request: PredictionRequest):
 
-    new_machine = pd.DataFrame(
-        [[
-            request.Type,
-            request.air_temp,
-            request.process_temp,
-            request.rotational_speed,
-            request.torque,
-            request.tool_wear
-        ]],
-        columns=[
-            "Type",
-            "air_temp",
-            "process_temp",
-            "rotational_speed",
-            "torque",
-            "tool_wear"
-        ]
-    )
+    # Demo Mode (بدون نموذج AI)
 
-    prediction = model.predict(new_machine)
-
-    probability = model.predict_proba(new_machine)
-
-    confidence = round(
-        float(max(probability[0]) * 100),
-        2
-    )
-
-    if prediction[0] == 1:
-
+    if request.torque > 60:
         prediction_text = "Machine Failure Predicted"
-
+        confidence = 96.8
     else:
-
         prediction_text = "Machine Healthy"
-
-    # ------------------------
-    # Save Prediction to PostgreSQL
-    # ------------------------
-
-    save_prediction(
-
-        request.Type,
-
-        request.air_temp,
-
-        request.process_temp,
-
-        request.rotational_speed,
-
-        request.torque,
-
-        request.tool_wear,
-
-        prediction_text,
-
-        confidence
-
-    )
-
-    # ------------------------
-    # Send to Kafka
-    # ------------------------
-
-    send_prediction(
-        prediction_text,
-        confidence
-    )
+        confidence = 98.2
 
     return {
-
         "prediction": prediction_text,
-
         "confidence": confidence
-
     }

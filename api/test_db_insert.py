@@ -1,4 +1,4 @@
-from services.db_service import save_prediction
+from api.services.db_service import save_prediction
 
 save_prediction(
     "Machine Healthy",

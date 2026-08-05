@@ -1,6 +1,6 @@
 from ollama import Client
 
-from services.db_service import get_latest_prediction
+from api.services.db_service import get_latest_prediction
 
 
 client = Client(
