@@ -14,7 +14,7 @@ from api.explain import router as explain_router
 app = FastAPI()
 
 app.include_router(copilot_router)
-app.include_router(explain_router)
+#app.include_router(explain_router)
 
 app.add_middleware(
     CORSMiddleware,
