@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from api.services.ollama_service import ask_llm
+from services.ollama_service import ask_llm
 
 router = APIRouter()
 

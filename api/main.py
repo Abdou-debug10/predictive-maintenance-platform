@@ -1,15 +1,15 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from api.models.prediction_request import PredictionRequest
-from api.services.db_service import save_prediction, get_predictions
-from api.copilot import router as copilot_router
+from models.prediction_request import PredictionRequest
+from services.db_service import save_prediction, get_predictions
+from copilot import router as copilot_router
 
 import joblib
 import pandas as pd
 
 # Kafka Producer
 from event_stream.producer import send_prediction
-from api.explain import router as explain_router
+from explain import router as explain_router
 
 app = FastAPI()
 
