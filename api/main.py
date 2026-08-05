@@ -70,7 +70,9 @@ def fetch_predictions():
 @app.post("/predict")
 def predict(request: PredictionRequest):
 
-    # Demo Mode (بدون نموذج AI)
+    # -----------------------
+    # Demo AI Prediction
+    # -----------------------
 
     if request.torque > 60:
         prediction_text = "Machine Failure Predicted"
@@ -78,6 +80,18 @@ def predict(request: PredictionRequest):
     else:
         prediction_text = "Machine Healthy"
         confidence = 98.2
+
+    # حفظ النتيجة في قاعدة البيانات
+    save_prediction(
+        machine_type=request.machine_type,
+        air_temp=request.air_temp,
+        process_temp=request.process_temp,
+        rotational_speed=request.rotational_speed,
+        torque=request.torque,
+        tool_wear=request.tool_wear,
+        prediction=prediction_text,
+        confidence=confidence
+    )
 
     return {
         "prediction": prediction_text,
