@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+pandas
+numpy==1.26.4
+scikit-learn
+joblib
+psycopg2-binary
+sqlalchemy
+python-dotenv
+pydantic
+xgboost
+kafka-python
+ollama>=0.6.2
+shap==0.46.0
+matplotlib

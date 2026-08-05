@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+
+# Environment Variables
+.env
+
+# ML Models
+*.pkl
+*.joblib
+
+# Dataset Files
+data/raw/
+data/processed/
+
+# VS Code
+.vscode/
+
+# Node
+node_modules/
+
+# Logs
+*.log
