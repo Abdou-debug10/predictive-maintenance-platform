@@ -25,7 +25,7 @@ export default function Database() {
     async function load() {
         try {
             setLoading(true);
-            const res = await fetch("http://localhost:8000/predictions");
+            const res = await fetch("https://predictive-maintenance-platform.onrender.com/predictions");
             if (!res.ok) throw new Error("Failed to fetch data");
             setRecords(await res.json());
             setError("");

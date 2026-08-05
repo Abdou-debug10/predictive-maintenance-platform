@@ -144,7 +144,7 @@ The assistant uses your deployed FastAPI backend together with the local Ollama 
         try {
 
             const response = await fetch(
-                "http://localhost:8000/copilot",
+                "https://predictive-maintenance-platform.onrender.com/copilot",
                 {
                     method: "POST",
                     headers: {
