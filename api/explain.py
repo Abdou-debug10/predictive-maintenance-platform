@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
-from api.models.prediction_request import PredictionRequest
+from models.prediction_request import PredictionRequest
 
-from api.services.explain_service import explain_prediction
+from services.explain_service import explain_prediction
 
 router = APIRouter()
 

@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models.prediction_request import PredictionRequest
-from services.db_service import save_prediction, get_predictions
-from copilot import router as copilot_router
+from api.models.prediction_request import PredictionRequest
+from api.services.db_service import save_prediction, get_predictions
+from api.copilot import router as copilot_router
 
 import joblib
 import pandas as pd
