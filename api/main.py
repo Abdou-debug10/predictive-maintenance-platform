@@ -70,56 +70,67 @@ def fetch_predictions():
 @app.post("/predict")
 def predict(request: PredictionRequest):
 
-    score = 0
+    # تبدأ الثقة من 99%
+    confidence = 99.0
 
-    # Machine Type
-    if request.machine_type == "L":
-        score += 1
-
-    # Air Temperature
+    # -------------------------
+    # Air Temperature (295 - 305 K)
+    # -------------------------
     if request.air_temp < 295:
-        score += 1
+        confidence -= (295 - request.air_temp) * 0.4
     elif request.air_temp > 305:
-        score += 1
+        confidence -= (request.air_temp - 305) * 0.4
 
-    # Process Temperature
+    # -------------------------
+    # Process Temperature (305 - 315 K)
+    # -------------------------
     if request.process_temp < 305:
-        score += 1
+        confidence -= (305 - request.process_temp) * 0.4
     elif request.process_temp > 315:
-        score += 1
+        confidence -= (request.process_temp - 315) * 0.4
 
-    # Rotational Speed
-    if request.rotational_speed < 1200:
-        score += 2
-    elif request.rotational_speed < 1400:
-        score += 1
+    # -------------------------
+    # Rotational Speed (1400 - 1800 RPM)
+    # -------------------------
+    if request.rotational_speed < 1400:
+        confidence -= (1400 - request.rotational_speed) / 80
     elif request.rotational_speed > 1800:
-        score += 1
+        confidence -= (request.rotational_speed - 1800) / 80
 
-    # Torque
-    if request.torque > 70:
-        score += 2
-    elif request.torque > 60:
-        score += 1
+    # -------------------------
+    # Torque depends on Machine Type
+    # -------------------------
+    if request.machine_type == "L":
+        max_torque = 55
+    elif request.machine_type == "M":
+        max_torque = 65
+    else:   # H
+        max_torque = 75
 
-    # Tool Wear
-    if request.tool_wear > 220:
-        score += 2
-    elif request.tool_wear > 150:
-        score += 1
+    if request.torque < 40:
+        confidence -= (40 - request.torque) * 0.8
+    elif request.torque > max_torque:
+        confidence -= (request.torque - max_torque) * 0.8
 
-    # Final decision
-    if score >= 5:
-        prediction = "Machine Failure Predicted"
-        confidence = 97.5
-    elif score >= 3:
-        prediction = "Maintenance Required Soon"
-        confidence = 88.7
-    else:
+    # -------------------------
+    # Tool Wear (0 - 150 min)
+    # -------------------------
+    if request.tool_wear > 150:
+        confidence -= (request.tool_wear - 150) * 0.15
+
+    # منع الثقة من النزول أقل من 50%
+    confidence = max(50.0, min(99.5, confidence))
+
+    # -------------------------
+    # Final Prediction
+    # -------------------------
+    if confidence >= 90:
         prediction = "Machine Healthy"
-        confidence = 98.2
+    elif confidence >= 75:
+        prediction = "Maintenance Required Soon"
+    else:
+        prediction = "Machine Failure Predicted"
 
-    # Save in database
     save_prediction(
         machine_type=request.machine_type,
         air_temp=request.air_temp,
@@ -128,27 +139,10 @@ def predict(request: PredictionRequest):
         torque=request.torque,
         tool_wear=request.tool_wear,
         prediction=prediction,
-        confidence=confidence
+        confidence=round(confidence, 1)
     )
 
     return {
         "prediction": prediction,
-        "confidence": confidence
-    }
-
-    # حفظ النتيجة في قاعدة البيانات
-    save_prediction(
-        machine_type=request.machine_type,
-        air_temp=request.air_temp,
-        process_temp=request.process_temp,
-        rotational_speed=request.rotational_speed,
-        torque=request.torque,
-        tool_wear=request.tool_wear,
-        prediction=prediction_text,
-        confidence=confidence
-    )
-
-    return {
-        "prediction": prediction_text,
-        "confidence": confidence
+        "confidence": round(confidence, 1)
     }
