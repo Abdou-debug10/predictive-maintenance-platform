@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class PredictionRequest(BaseModel):
-    Type: int
+    machine_type: str      # L / M / H
     air_temp: float
     process_temp: float
     rotational_speed: int

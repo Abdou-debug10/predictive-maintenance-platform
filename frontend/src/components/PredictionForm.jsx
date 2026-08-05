@@ -4,7 +4,7 @@ import { API } from "../utils/api";
 export default function PredictionForm({ onPrediction }) {
 
     const [form, setForm] = useState({
-        Type: 2,
+        machine_type: "H",
         air_temp: 300,
         process_temp: 310,
         rotational_speed: 1500,
@@ -58,7 +58,7 @@ export default function PredictionForm({ onPrediction }) {
 
         setForm({
 
-            Type: 2,
+            machine_type: "H",
 
             air_temp: 300,
 
@@ -222,17 +222,14 @@ export default function PredictionForm({ onPrediction }) {
                     </label>
 
                     <select
-                        name="Type"
-                        value={form.Type}
+                       name="machine_type"
+                        value={form.machine_type}
                         onChange={handleChange}
                         style={inputStyle}
                     >
-
-                        <option value={0}>Low (L)</option>
-
-                        <option value={1}>Medium (M)</option>
-
-                        <option value={2}>High (H)</option>
+                        <option value="L">Low (L)</option>
+                        <option value="M">Medium (M)</option>
+                        <option value="H">High (H)</option>
 
                     </select>
 
