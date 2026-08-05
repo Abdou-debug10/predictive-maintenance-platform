@@ -44,16 +44,13 @@ export default function PredictionForm({ onPrediction }) {
     };
 
     function handleChange(e) {
-
         const { name, value } = e.target;
 
-        setForm({
-            ...form,
-            [name]: Number(value)
-        });
-
+        setForm(prev => ({
+            ...prev,
+            [name]: name === "machine_type" ? value : Number(value)
+        }));
     }
-
     function resetForm() {
 
         setForm({
