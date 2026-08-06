@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import ProtectedRoute from "./components/protectrouter";
 import Navbar from "./components/Navbar";
+
 import Login from "./pages/login";
 import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
@@ -11,92 +13,125 @@ import AICopilotPage from "./pages/AICopilotPage";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 function App() {
 
     return (
 
         <BrowserRouter>
 
-            <div
-                style={{
-                    display: "flex",
-                    minHeight: "100vh",
-                    background: "#eef2f7"
-                }}
-            >
 
-                <Navbar />
-
-                <div
-                    style={{
-                        flex: 1,
-                        overflowX: "hidden",
-                        padding: "20px"
-                    }}
-                >
-
-               <Route 
-    path="/" 
-    element={
-        <ProtectedRoute>
-            <Dashboard />
-        </ProtectedRoute>
-    }
-/>
+            <Routes>
 
 
-<Route 
-    path="/analytics" 
-    element={
-        <ProtectedRoute>
-            <Analytics />
-        </ProtectedRoute>
-    }
-/>
+                {/* Login بدون حماية */}
+                <Route
+                    path="/login"
+                    element={<Login />}
+                />
 
 
-<Route 
-    path="/history" 
-    element={
-        <ProtectedRoute>
-            <PredictionHistory />
-        </ProtectedRoute>
-    }
-/>
+                {/* الصفحات المحمية */}
+                <Route
+
+                    path="/*"
+
+                    element={
+
+                        <ProtectedRoute>
+
+                            <MainLayout />
+
+                        </ProtectedRoute>
+
+                    }
+
+                />
 
 
-<Route 
-    path="/database" 
-    element={
-        <ProtectedRoute>
-            <Database />
-        </ProtectedRoute>
-    }
-/>
+            </Routes>
 
-
-<Route 
-    path="/copilot" 
-    element={
-        <ProtectedRoute>
-            <AICopilotPage />
-        </ProtectedRoute>
-    }
-/>
-
-                </div>
-
-            </div>
 
             <ToastContainer
                 position="top-right"
                 autoClose={3000}
             />
 
+
         </BrowserRouter>
 
     );
 
 }
+
+
+
+function MainLayout() {
+
+    return (
+
+        <div
+            style={{
+                display: "flex",
+                minHeight: "100vh",
+                background: "#eef2f7"
+            }}
+        >
+
+
+            <Navbar />
+
+
+            <div
+                style={{
+                    flex: 1,
+                    overflowX: "hidden",
+                    padding: "20px"
+                }}
+            >
+
+                <Routes>
+
+                    <Route
+                        path="/"
+                        element={<Dashboard />}
+                    />
+
+
+                    <Route
+                        path="/analytics"
+                        element={<Analytics />}
+                    />
+
+
+                    <Route
+                        path="/history"
+                        element={<PredictionHistory />}
+                    />
+
+
+                    <Route
+                        path="/database"
+                        element={<Database />}
+                    />
+
+
+                    <Route
+                        path="/copilot"
+                        element={<AICopilotPage />}
+                    />
+
+                </Routes>
+
+
+            </div>
+
+
+        </div>
+
+    );
+
+}
+
 
 export default App;
