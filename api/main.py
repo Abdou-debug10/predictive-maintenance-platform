@@ -70,64 +70,70 @@ def fetch_predictions():
 @app.post("/predict")
 def predict(request: PredictionRequest):
 
-    # تبدأ الثقة من 99%
-    confidence = 99.0
+    confidence = 100.0
 
     # -------------------------
-    # Air Temperature (295 - 305 K)
+    # Air Temperature (Ideal = 300 K)
     # -------------------------
-    if request.air_temp < 295:
-        confidence -= (295 - request.air_temp) * 0.4
-    elif request.air_temp > 305:
-        confidence -= (request.air_temp - 305) * 0.4
+    confidence -= abs(request.air_temp - 300) * 0.8
 
     # -------------------------
-    # Process Temperature (305 - 315 K)
+    # Process Temperature (Ideal = 310 K)
     # -------------------------
-    if request.process_temp < 305:
-        confidence -= (305 - request.process_temp) * 0.4
-    elif request.process_temp > 315:
-        confidence -= (request.process_temp - 315) * 0.4
+    confidence -= abs(request.process_temp - 310) * 0.8
 
     # -------------------------
-    # Rotational Speed (1400 - 1800 RPM)
+    # Rotational Speed (Ideal = 1600 RPM)
     # -------------------------
-    if request.rotational_speed < 1400:
-        confidence -= (1400 - request.rotational_speed) / 80
-    elif request.rotational_speed > 1800:
-        confidence -= (request.rotational_speed - 1800) / 80
+    confidence -= abs(request.rotational_speed - 1600) / 20
 
     # -------------------------
-    # Torque depends on Machine Type
+    # Torque
     # -------------------------
-    if request.machine_type == "L":
-        max_torque = 55
-    elif request.machine_type == "M":
-        max_torque = 65
-    else:   # H
-        max_torque = 75
+    ideal_torque = {
+        "L": 45,
+        "M": 55,
+        "H": 65
+    }
 
-    if request.torque < 40:
-        confidence -= (40 - request.torque) * 0.8
-    elif request.torque > max_torque:
-        confidence -= (request.torque - max_torque) * 0.8
+    confidence -= abs(
+        request.torque - ideal_torque[request.machine_type]
+    ) * 0.7
 
     # -------------------------
-    # Tool Wear (0 - 150 min)
+    # Tool Wear
     # -------------------------
-    if request.tool_wear > 150:
-        confidence -= (request.tool_wear - 150) * 0.15
-
-    # منع الثقة من النزول أقل من 50%
-    confidence = max(50.0, min(99.5, confidence))
+    confidence -= request.tool_wear * 0.12
 
     # -------------------------
-    # Final Prediction
+    # Extra penalties
+    # -------------------------
+    if request.air_temp > 320:
+        confidence -= 5
+
+    if request.process_temp > 320:
+        confidence -= 5
+
+    if request.rotational_speed > 2000:
+        confidence -= 8
+
+    if request.tool_wear > 180:
+        confidence -= 8
+
+    # -------------------------
+    # Clamp
+    # -------------------------
+    confidence = max(0, min(100, confidence))
+
+    # -------------------------
+    # Prediction
     # -------------------------
     if confidence >= 90:
         prediction = "Machine Healthy"
-    elif confidence >= 75:
+    elif confidence >= 70:
         prediction = "Maintenance Required Soon"
+    elif confidence >= 50:
+        prediction = "High Risk"
     else:
         prediction = "Machine Failure Predicted"
 
@@ -139,10 +145,10 @@ def predict(request: PredictionRequest):
         torque=request.torque,
         tool_wear=request.tool_wear,
         prediction=prediction,
-        confidence=round(confidence, 1)
+        confidence=round(confidence, 2)
     )
 
     return {
         "prediction": prediction,
-        "confidence": round(confidence, 1)
+        "confidence": round(confidence, 2)
     }
