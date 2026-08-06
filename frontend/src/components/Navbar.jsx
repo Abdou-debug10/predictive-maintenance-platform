@@ -3,12 +3,27 @@ import {
     FaChartBar,
     FaDatabase,
     FaHome,
-    FaHistory
+    FaHistory,
+    FaSignOutAlt
 } from "react-icons/fa";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { supabase } from "../utils/supabase";
+
 
 function Navbar() {
+
+    const navigate = useNavigate();
+
+
+    async function logout() {
+
+        await supabase.auth.signOut();
+
+        navigate("/login");
+
+    }
+
 
     return (
 
@@ -70,11 +85,13 @@ function Navbar() {
 
                 </div>
 
+
                 <MenuItem
                     to="/"
                     icon={<FaHome size={18} />}
                     text="Dashboard"
                 />
+
 
                 <MenuItem
                     to="/analytics"
@@ -82,11 +99,13 @@ function Navbar() {
                     text="Analytics"
                 />
 
+
                 <MenuItem
                     to="/history"
                     icon={<FaHistory size={18} />}
                     text="Prediction History"
                 />
+
 
                 <MenuItem
                     to="/database"
@@ -94,13 +113,16 @@ function Navbar() {
                     text="Database"
                 />
 
+
                 <MenuItem
                     to="/copilot"
                     icon={<FaRobot size={18} />}
                     text="AI Copilot"
                 />
 
+
             </div>
+
 
             <div
                 style={{
@@ -108,6 +130,49 @@ function Navbar() {
                     paddingTop: "18px"
                 }}
             >
+
+                <button
+
+                    onClick={logout}
+
+                    style={{
+
+                        display: "flex",
+
+                        alignItems: "center",
+
+                        gap: "12px",
+
+                        width: "100%",
+
+                        padding: "12px 18px",
+
+                        marginBottom: "20px",
+
+                        borderRadius: "12px",
+
+                        border: "none",
+
+                        background: "#DC2626",
+
+                        color: "#FFFFFF",
+
+                        fontSize: "15px",
+
+                        fontWeight: 600,
+
+                        cursor: "pointer"
+
+                    }}
+
+                >
+
+                    <FaSignOutAlt size={18} />
+
+                    Logout
+
+                </button>
+
 
                 <div
                     style={{
@@ -118,7 +183,9 @@ function Navbar() {
                     Version 1.0
                 </div>
 
+
             </div>
+
 
         </aside>
 
@@ -126,12 +193,15 @@ function Navbar() {
 
 }
 
+
 function MenuItem({ to, icon, text }) {
 
     return (
 
         <NavLink
+
             to={to}
+
             style={({ isActive }) => ({
 
                 display: "flex",
@@ -159,6 +229,7 @@ function MenuItem({ to, icon, text }) {
                 transition: "all 0.2s ease"
 
             })}
+
         >
 
             {icon}
@@ -170,5 +241,6 @@ function MenuItem({ to, icon, text }) {
     );
 
 }
+
 
 export default Navbar;

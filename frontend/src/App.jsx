@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import ProtectedRoute from "./components/protectrouter";
 import Navbar from "./components/Navbar";
-
+import Login from "./pages/login";
 import Dashboard from "./pages/Dashboard";
 import Analytics from "./pages/Analytics";
 import PredictionHistory from "./pages/PredictionHistory";
@@ -35,22 +35,54 @@ function App() {
                     }}
                 >
 
-                    <Routes>
+               <Route 
+    path="/" 
+    element={
+        <ProtectedRoute>
+            <Dashboard />
+        </ProtectedRoute>
+    }
+/>
 
-                        <Route path="/" element={<Dashboard />} />
 
-                        <Route path="/analytics" element={<Analytics />} />
+<Route 
+    path="/analytics" 
+    element={
+        <ProtectedRoute>
+            <Analytics />
+        </ProtectedRoute>
+    }
+/>
 
-                        <Route
-                            path="/history"
-                            element={<PredictionHistory />}
-                        />
 
-                        <Route path="/database" element={<Database />} />
+<Route 
+    path="/history" 
+    element={
+        <ProtectedRoute>
+            <PredictionHistory />
+        </ProtectedRoute>
+    }
+/>
 
-                        <Route path="/copilot" element={<AICopilotPage />} />
 
-                    </Routes>
+<Route 
+    path="/database" 
+    element={
+        <ProtectedRoute>
+            <Database />
+        </ProtectedRoute>
+    }
+/>
+
+
+<Route 
+    path="/copilot" 
+    element={
+        <ProtectedRoute>
+            <AICopilotPage />
+        </ProtectedRoute>
+    }
+/>
 
                 </div>
 
